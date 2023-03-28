@@ -3,6 +3,7 @@ import { Container, Nav, Navbar } from "react-bootstrap";
 import logoIcon from "./../../assets/icons/livros.png";
 import { Link, useNavigate } from "react-router-dom";
 import { logout } from "../../firebase/auth";
+import { toast } from "react-hot-toast";
 
 export function Menu() {
 
@@ -10,6 +11,10 @@ export function Menu() {
 
     function onLogout() {
         logout().then(() => {
+            toast.success(`Volte sempre! Deslogado com sucesso.`, {
+                position: "bottom-right",
+                duration: 2500
+            })
             navigate("/login");
         });
     }
