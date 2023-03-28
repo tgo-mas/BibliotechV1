@@ -4,15 +4,17 @@ import { AuthContext } from "./contexts/AuthContext";
 import { useEffect, useState } from "react";
 import { Toaster } from "react-hot-toast";
 import { auth } from "./firebase/config";
+import { onAuthStateChanged } from "firebase/auth";
 import { Root } from "./pages/Root/Root";
 import { Home } from "./pages/Home/Home";
 import { Login } from "./pages/Login/Login";
 import { Cadastro } from "./pages/Cadastro/Cadastro";
-import { onAuthStateChanged } from "firebase/auth";
+import { AdicionarLivro } from "./pages/AdicionarLivro/AdicionarLivro";
+import { Livros } from "./pages/Livros/Livros"
 
 export function App() {
 
-    const [ logado, setLogado ] = useState(null);
+    const [logado, setLogado] = useState(null);
 
     useEffect(() => {
         onAuthStateChanged(auth, (user) => {
@@ -28,8 +30,10 @@ export function App() {
                     <Routes>
                         <Route path="/" element={<Root />}>
                             <Route path="/" element={<Home />} />
+                            <Route path="/livros" element={<Livros />} />
+                            <Route path="/livros/adicionar" element={<AdicionarLivro />} />
                         </Route>
-                        <Route path="/login" element={<Login/>} />
+                        <Route path="/login" element={<Login />} />
                         <Route path="/cadastro" element={<Cadastro />} />
                     </Routes>
                 </BrowserRouter>
