@@ -3,7 +3,7 @@ import { Container, Button, Table } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { getLivros } from "../../firebase/livros";
 
-export function Livros(){
+export function Livros() {
 
     const [livros, setLivros] = useState([]);
 
@@ -15,7 +15,7 @@ export function Livros(){
         buscar();
     }, []);
 
-    return(
+    return (
         <div className="livros">
             <Container>
                 <div className="d-flex justify-content-between align-items-center">
@@ -33,6 +33,7 @@ export function Livros(){
                             <th>Categoria</th>
                             <th>ISBN</th>
                             <th>Capa</th>
+                            <th>Ações</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -43,7 +44,23 @@ export function Livros(){
                                     <td>{livro.autor}</td>
                                     <td>{livro.categoria}</td>
                                     <td>{livro.isbn}</td>
-                                    <td><img style={{width: '100px'}} src={livro.urlCapa} alt={livro.titulo}/></td>
+                                    <td><img style={{ width: '100px' }} src={livro.urlCapa} alt={livro.titulo} /></td>
+                                    <td>
+                                        <Button 
+                                            variant="success" 
+                                            title="Editar"
+                                            as={Link}
+                                            to={`/livros/editar/${livro.id}`}
+                                        >
+                                            <i class="bi bi-pencil-fill"></i>
+                                        </Button>
+                                        <Button 
+                                        variant="danger" 
+                                        title="Excluir"
+                                        >
+                                            <i class="bi bi-trash3-fill"></i>
+                                        </Button>
+                                    </td>
                                 </tr>
                             )
                         })}
