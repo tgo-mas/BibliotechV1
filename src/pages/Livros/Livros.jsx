@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Container, Button, Table } from "react-bootstrap";
 import { toast } from "react-hot-toast";
 import { Link } from "react-router-dom";
-import { getLivros, deleteLivro, getLivro } from "../../firebase/livros";
+import { getLivros, deleteLivro } from "../../firebase/livros";
 import { Loader } from "../../components/Loader/Loader";
 
 export function Livros() {
