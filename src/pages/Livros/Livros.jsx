@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { Container, Button, Table } from "react-bootstrap";
+import { toast } from "react-hot-toast";
 import { Link } from "react-router-dom";
-import { getLivros } from "../../firebase/livros";
+import { getLivros, deleteLivro, getLivro } from "../../firebase/livros";
 
 export function Livros() {
 
@@ -14,6 +15,22 @@ export function Livros() {
         }
         buscar();
     }, []);
+
+    function removeLivro(id, titulo) {
+        const confirma = window.confirm(`Tem certeza que deseja excluir o livro ${titulo}?`);
+        if (confirma) {
+            deleteLivro(id)
+            toast.success(`${titulo} removido com sucesso!`, {
+                position: "bottom-right",
+                duration: 2500
+            });
+        } else {
+            toast.error(`Operação cancelada!`, {
+                position: "bottom-right",
+                duration: 2500
+            })
+        }
+    }
 
     return (
         <div className="livros">
@@ -46,19 +63,20 @@ export function Livros() {
                                     <td>{livro.isbn}</td>
                                     <td><img style={{ width: '100px' }} src={livro.urlCapa} alt={livro.titulo} /></td>
                                     <td>
-                                        <Button 
-                                            variant="success" 
+                                        <Button
+                                            variant="success"
                                             title="Editar"
                                             as={Link}
                                             to={`/livros/editar/${livro.id}`}
                                         >
-                                            <i class="bi bi-pencil-fill"></i>
+                                            <i className="bi bi-pencil-fill"></i>
                                         </Button>
-                                        <Button 
-                                        variant="danger" 
-                                        title="Excluir"
+                                        <Button
+                                            onClick={() => removeLivro(livro.id, livro.titulo)}
+                                            variant="danger"
+                                            title="Excluir"
                                         >
-                                            <i class="bi bi-trash3-fill"></i>
+                                            <i className="bi bi-trash3-fill"></i>
                                         </Button>
                                     </td>
                                 </tr>

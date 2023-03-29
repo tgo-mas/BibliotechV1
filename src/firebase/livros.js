@@ -1,5 +1,6 @@
 import {
     addDoc,
+    deleteDoc,
     doc,
     getDoc,
     getDocs, 
@@ -33,5 +34,5 @@ export async function updateLivro(id, data) {
 }
 
 export async function deleteLivro(id) {
-    await updateDoc(doc(livrosCollection, id));
+    await deleteDoc(doc(livrosCollection, id));
 }
