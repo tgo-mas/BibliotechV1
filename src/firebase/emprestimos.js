@@ -3,12 +3,12 @@ import {
     deleteDoc,
     doc,
     getDoc,
-    getDocs, 
+    getDocs,
     updateDoc
 } from "firebase/firestore";
 import { emprestimosCollection } from "./collections";
 
-export async function getEmprestimos(){
+export async function getEmprestimos() {
     const snapshot = await getDocs(emprestimosCollection);
 
     const emprestimos = [];
@@ -20,6 +20,15 @@ export async function getEmprestimos(){
     return emprestimos;
 }
 
-export async function addEmprestimo(data){
+export async function getEmprestimo(id) {
+    const snapshot = await getDoc(doc(emprestimosCollection, id));
+    return { ...snapshot.data(), id: snapshot.id };
+}
+
+export async function addEmprestimo(data) {
     await addDoc(emprestimosCollection, data);
+}
+
+export async function updateEmprestimo(id, data) {
+    await updateDoc(doc(emprestimosCollection, id), data);
 }

@@ -1,8 +1,8 @@
-import { Container, Form, Button } from "react-bootstrap";
+import { Container, Form, Button, FloatingLabel } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router";
-import { addLivro } from "../../firebase/livros.js";
+import { addLivro, uploadCapaLivro } from "../../firebase/livros.js";
 
 export function AdicionarLivro() {
 
@@ -15,22 +15,33 @@ export function AdicionarLivro() {
     const navigate = useNavigate();
 
     function onSubmit(data){
-        addLivro(data)
-            .then(() => {
-                toast.success(`${data.titulo} cadastrado com sucesso!`, {
-                    position: "bottom-right",
-                    duration: 2500
-                });
+        const imagem = data.imagem[0];
+        if (imagem) {
+            const toastId = toast.loading("Upload da imagem...", { position: "top-right" });
+            uploadCapaLivro(imagem).then(url => {
+                toast.dismiss(toastId);
+                data.urlCapa = url;
+                delete data.imagem;
+                addLivro(data).then(() => {
+                    toast.success("Livro adicionado com sucesso!", { duration: 2000, position: "bottom-right" })
+                    navigate("/livros");
+                })
+            })
+        }
+        else {
+            delete data.imagem;
+            addLivro(data).then(() => {
+                toast.success("Livro adicionado com sucesso!", { duration: 2000, position: "bottom-right" })
                 navigate("/livros");
-            });
+            })
+        }
     }
 
     return (
-        <Container>
+        <Container className="p-3">
             <h1>Adicionar Livro</h1>
             <Form onSubmit={handleSubmit(onSubmit)}>
-                <Form.Group className="mb-3" controlId="formBasicEmail">
-                    <Form.Label>Título</Form.Label>
+                <FloatingLabel className="mb-3" label="Título" controlId="formBasicEmail">
                     <Form.Control
                         type="text"
                         className={errors.titulo && "is-invalid"}
@@ -39,9 +50,8 @@ export function AdicionarLivro() {
                     <Form.Text className="text-danger">
                         {errors.titulo?.message}
                     </Form.Text>
-                </Form.Group>
-                <Form.Group className="mb-3" controlId="formBasicEmail">
-                    <Form.Label>Autor</Form.Label>
+                </FloatingLabel>
+                <FloatingLabel className="mb-3" label="Autor" controlId="formBasicEmail">
                     <Form.Control
                         type="text"
                         className={errors.autor && "is-invalid"}
@@ -50,9 +60,8 @@ export function AdicionarLivro() {
                     <Form.Text className="text-danger">
                         {errors.autor?.message}
                     </Form.Text>
-                </Form.Group>
-                <Form.Group className="mb-3" controlId="formBasicEmail">
-                    <Form.Label>Categoria</Form.Label>
+                </FloatingLabel>
+                <FloatingLabel className="mb-3" label="Categoria" controlId="formBasicEmail">
                     <Form.Control
                         type="text"
                         className={errors.categoria && "is-invalid"}
@@ -61,9 +70,8 @@ export function AdicionarLivro() {
                     <Form.Text className="text-danger">
                         {errors.categoria?.message}
                     </Form.Text>
-                </Form.Group>
-                <Form.Group className="mb-3" controlId="formBasicEmail">
-                    <Form.Label>ISBN</Form.Label>
+                </FloatingLabel>
+                <FloatingLabel className="mb-3" label="ISBN" controlId="formBasicEmail">
                     <Form.Control
                         type="text"
                         className={errors.isbn && "is-invalid"}
@@ -72,17 +80,14 @@ export function AdicionarLivro() {
                     <Form.Text className="text-danger">
                         {errors.isbn?.message}
                     </Form.Text>
-                </Form.Group>
+                </FloatingLabel>
                 <Form.Group className="mb-3" controlId="formBasicEmail">
                     <Form.Label>Imagem da capa</Form.Label>
                     <Form.Control
-                        type="url"
-                        className={errors.urlCapa && "is-invalid"}
-                        {...register("urlCapa", { required: "O endereço da capa é obrigatório!" })}
+                        type="file"
+                        accept=".jpg,.jpeg,.png,.gif"
+                        {...register("imagem")}                    
                     />
-                    <Form.Text className="text-danger">
-                        {errors.urlCapa?.message}
-                    </Form.Text>
                 </Form.Group>
                 <Button type="submit" variant="success">Adicionar</Button>
             </Form>
